@@ -1,19 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const SignInPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setIsEmailValid(true);
+    validateForm();
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setIsPasswordValid(true);
+    validateForm();
+  };
+
+  const validateForm = () => {
+    setIsFormValid(email.trim() !== '' && password.trim() !== '');
+  };
+
+  const handleBlur = (field) => {
+    if (field === 'email') {
+      setIsEmailValid(email.trim() !== '');
+    } else if (field === 'password') {
+      setIsPasswordValid(password.trim() !== '');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //
+  };
+
   return (
-    <div className="bg-image min-h-screen p-6 flex items-center justify-center lg:justify-around">
-      {/* Background Image */}
-      <div className="hidden min-h-[620px] lg:flex items-start justify-start flex-col">
+    <div className="min-h-screen flex items-center justify-center p-4 lg:justify-around">
+     
+      <div className="hidden lg:flex items-center justify-start flex-col w-1/2 p-4">
+       
+        <p className="text-3xl font-bold text-gray-800">Your Logo or Text Here</p>
       </div>
 
-      {/* Sign-In Section */}
-      <div className="w-full md:w-1/2 flex items-center justify-center">
-        <div className="p-8 md:p-16 bg-white shadow-lg rounded-lg">
-          {/* HIFI Logo and Title */}
+      
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4">
+        <div className="w-full md:w-2/3 lg:w-1/2 p-8 bg-white shadow-lg rounded-lg">
+        
           <div className="flex items-center mb-6">
             <img
-              src="hifi_logo.png"
+              src="hifi_logo.svg"
               alt="HIFI Logo"
               className="w-10 h-10 mr-2"
             />
@@ -23,67 +60,66 @@ const SignInPage = () => {
           <h2 className="text-xl font-semibold mb-2">Welcome</h2>
           <p className="mb-6">Sign in to HIFI Pay</p>
 
-          {/* Sign-In with Google */}
+          
           <div className="flex items-center justify-between mb-6">
-            <img
-              src="google_logo.png"
-              alt="Google Logo"
-              className="w-8 h-8 mr-2 cursor-pointer"
-            />
-            <span className="text-sm text-blue-500 cursor-pointer">
+            <span className="w-[260px] sm:w-[234px] h-[42.49px] px-2 py-1 bg-white rounded-md border border-[#B0BABF] ">
+              <img
+                src="https://staging-internal.d1nwfechdidmfz.amplifyapp.com/_next/static/media/googleLogo.5fd18ff9.svg"
+                alt="Google Logo"
+                className="w-5 h-8 mr-2 cursor-pointer flex-col justify-center items-center gap-2 inline-flex"
+              />
               Sign in Using Google
             </span>
           </div>
 
           {/* Sign-In Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm mb-1">Email address</label>
+              <label htmlFor="email" className="block text-sm mb-1">
+              </label>
               <input
                 type="email"
                 id="email"
-                className="w-full border rounded-md py-2 px-3"
-                placeholder="Enter your email"
+                value={email}
+                onChange={handleEmailChange}
+                onBlur={() => handleBlur('email')}
+                className={`w-full border rounded-md py-2 px-3 ${
+                  isEmailValid ? '' : 'border-red-500'
+                }`}
+                placeholder="Email address"
               />
+              {!isEmailValid && (
+                <p className="text-red-500 text-sm mt-1">Email is required</p>
+              )}
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="block text-sm mb-1">Password</label>
+              <label htmlFor="password" className="block text-sm mb-1">
+                
+              </label>
               <div className="relative">
                 <input
                   type="password"
-                  id="password"
-                  className="w-full border rounded-md py-2 px-3 pr-10"
-                  placeholder="Enter your password"
+                  id="password" 
+                  value={password}
+                  onChange={handlePasswordChange}
+                  onBlur={() => handleBlur('password')}
+                  className={`w-full border rounded-md py-2 px-3 pr-10 ${
+                    isPasswordValid ? '' : 'border-red-500'
+                  }`}
+                  placeholder="Password"
                 />
-                <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  {/* Eye icon for password visibility */}
-                  {/* You can replace the eye icon with your preferred icon */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-gray-500 cursor-pointer"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 14l9-5-9-5-9 5 9 5z"
-                    />
-                  </svg>
-                </span>
+                
               </div>
+              {!isPasswordValid && (
+                <p className="text-red-500 text-sm mt-1">Password is required</p>
+              )}
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600"
+              className={`w-full bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600 ${
+                !isFormValid && 'opacity-50 cursor-not-allowed'
+              }`}
+              disabled={!isFormValid}
             >
               Sign In
             </button>
